@@ -275,7 +275,7 @@ export function DataTable<T>({
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          variant="destructive"
+                          className="text-destructive focus:text-destructive"
                           onSelect={() => setPendingDelete(rowKey(row))}
                         >
                           <Trash2 className="size-4" /> Delete
