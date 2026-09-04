@@ -10,11 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BankEntryRouteImport } from './routes/bank-entry'
+import { Route as DcEntryRouteImport } from './routes/dc-entry'
+import { Route as FinishedGoodsRouteImport } from './routes/finished-goods'
+import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as InwardEntryRouteImport } from './routes/inward-entry'
+import { Route as LedgerRouteImport } from './routes/ledger'
 import { Route as LogEntryRouteImport } from './routes/log-entry'
 import { Route as PartiesRouteImport } from './routes/parties'
+import { Route as PettyCashRouteImport } from './routes/petty-cash'
 import { Route as PlannedWorkingsRouteImport } from './routes/planned-workings'
+import { Route as PriceListRouteImport } from './routes/price-list'
+import { Route as ProcessCostingRouteImport } from './routes/process-costing'
 import { Route as ProcessEntryRouteImport } from './routes/process-entry'
+import { Route as ProductCostingRouteImport } from './routes/product-costing'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as SalesOrdersIndexRouteImport } from './routes/sales-orders.index'
 import { Route as SalesOrdersOrderIdRouteImport } from './routes/sales-orders.$orderId'
@@ -24,9 +34,34 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BankEntryRoute = BankEntryRouteImport.update({
+  id: '/bank-entry',
+  path: '/bank-entry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DcEntryRoute = DcEntryRouteImport.update({
+  id: '/dc-entry',
+  path: '/dc-entry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinishedGoodsRoute = FinishedGoodsRouteImport.update({
+  id: '/finished-goods',
+  path: '/finished-goods',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvoicesRoute = InvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InwardEntryRoute = InwardEntryRouteImport.update({
   id: '/inward-entry',
   path: '/inward-entry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LedgerRoute = LedgerRouteImport.update({
+  id: '/ledger',
+  path: '/ledger',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LogEntryRoute = LogEntryRouteImport.update({
@@ -39,14 +74,39 @@ const PartiesRoute = PartiesRouteImport.update({
   path: '/parties',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PettyCashRoute = PettyCashRouteImport.update({
+  id: '/petty-cash',
+  path: '/petty-cash',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlannedWorkingsRoute = PlannedWorkingsRouteImport.update({
   id: '/planned-workings',
   path: '/planned-workings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PriceListRoute = PriceListRouteImport.update({
+  id: '/price-list',
+  path: '/price-list',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProcessCostingRoute = ProcessCostingRouteImport.update({
+  id: '/process-costing',
+  path: '/process-costing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProcessEntryRoute = ProcessEntryRouteImport.update({
   id: '/process-entry',
   path: '/process-entry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductCostingRoute = ProductCostingRouteImport.update({
+  id: '/product-costing',
+  path: '/product-costing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TasksRoute = TasksRouteImport.update({
@@ -67,22 +127,42 @@ const SalesOrdersOrderIdRoute = SalesOrdersOrderIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bank-entry': typeof BankEntryRoute
+  '/dc-entry': typeof DcEntryRoute
+  '/finished-goods': typeof FinishedGoodsRoute
+  '/invoices': typeof InvoicesRoute
   '/inward-entry': typeof InwardEntryRoute
+  '/ledger': typeof LedgerRoute
   '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
+  '/petty-cash': typeof PettyCashRoute
   '/planned-workings': typeof PlannedWorkingsRoute
+  '/price-list': typeof PriceListRoute
+  '/process-costing': typeof ProcessCostingRoute
   '/process-entry': typeof ProcessEntryRoute
+  '/product-costing': typeof ProductCostingRoute
+  '/reports': typeof ReportsRoute
   '/tasks': typeof TasksRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
   '/sales-orders/': typeof SalesOrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bank-entry': typeof BankEntryRoute
+  '/dc-entry': typeof DcEntryRoute
+  '/finished-goods': typeof FinishedGoodsRoute
+  '/invoices': typeof InvoicesRoute
   '/inward-entry': typeof InwardEntryRoute
+  '/ledger': typeof LedgerRoute
   '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
+  '/petty-cash': typeof PettyCashRoute
   '/planned-workings': typeof PlannedWorkingsRoute
+  '/price-list': typeof PriceListRoute
+  '/process-costing': typeof ProcessCostingRoute
   '/process-entry': typeof ProcessEntryRoute
+  '/product-costing': typeof ProductCostingRoute
+  '/reports': typeof ReportsRoute
   '/tasks': typeof TasksRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
   '/sales-orders': typeof SalesOrdersIndexRoute
@@ -90,11 +170,21 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bank-entry': typeof BankEntryRoute
+  '/dc-entry': typeof DcEntryRoute
+  '/finished-goods': typeof FinishedGoodsRoute
+  '/invoices': typeof InvoicesRoute
   '/inward-entry': typeof InwardEntryRoute
+  '/ledger': typeof LedgerRoute
   '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
+  '/petty-cash': typeof PettyCashRoute
   '/planned-workings': typeof PlannedWorkingsRoute
+  '/price-list': typeof PriceListRoute
+  '/process-costing': typeof ProcessCostingRoute
   '/process-entry': typeof ProcessEntryRoute
+  '/product-costing': typeof ProductCostingRoute
+  '/reports': typeof ReportsRoute
   '/tasks': typeof TasksRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
   '/sales-orders/': typeof SalesOrdersIndexRoute
@@ -103,33 +193,63 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bank-entry'
+    | '/dc-entry'
+    | '/finished-goods'
+    | '/invoices'
     | '/inward-entry'
+    | '/ledger'
     | '/log-entry'
     | '/parties'
+    | '/petty-cash'
     | '/planned-workings'
+    | '/price-list'
+    | '/process-costing'
     | '/process-entry'
+    | '/product-costing'
+    | '/reports'
     | '/tasks'
     | '/sales-orders/$orderId'
     | '/sales-orders/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bank-entry'
+    | '/dc-entry'
+    | '/finished-goods'
+    | '/invoices'
     | '/inward-entry'
+    | '/ledger'
     | '/log-entry'
     | '/parties'
+    | '/petty-cash'
     | '/planned-workings'
+    | '/price-list'
+    | '/process-costing'
     | '/process-entry'
+    | '/product-costing'
+    | '/reports'
     | '/tasks'
     | '/sales-orders/$orderId'
     | '/sales-orders'
   id:
     | '__root__'
     | '/'
+    | '/bank-entry'
+    | '/dc-entry'
+    | '/finished-goods'
+    | '/invoices'
     | '/inward-entry'
+    | '/ledger'
     | '/log-entry'
     | '/parties'
+    | '/petty-cash'
     | '/planned-workings'
+    | '/price-list'
+    | '/process-costing'
     | '/process-entry'
+    | '/product-costing'
+    | '/reports'
     | '/tasks'
     | '/sales-orders/$orderId'
     | '/sales-orders/'
@@ -137,11 +257,21 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BankEntryRoute: typeof BankEntryRoute
+  DcEntryRoute: typeof DcEntryRoute
+  FinishedGoodsRoute: typeof FinishedGoodsRoute
+  InvoicesRoute: typeof InvoicesRoute
   InwardEntryRoute: typeof InwardEntryRoute
+  LedgerRoute: typeof LedgerRoute
   LogEntryRoute: typeof LogEntryRoute
   PartiesRoute: typeof PartiesRoute
+  PettyCashRoute: typeof PettyCashRoute
   PlannedWorkingsRoute: typeof PlannedWorkingsRoute
+  PriceListRoute: typeof PriceListRoute
+  ProcessCostingRoute: typeof ProcessCostingRoute
   ProcessEntryRoute: typeof ProcessEntryRoute
+  ProductCostingRoute: typeof ProductCostingRoute
+  ReportsRoute: typeof ReportsRoute
   TasksRoute: typeof TasksRoute
   SalesOrdersOrderIdRoute: typeof SalesOrdersOrderIdRoute
   SalesOrdersIndexRoute: typeof SalesOrdersIndexRoute
@@ -156,11 +286,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bank-entry': {
+      id: '/bank-entry'
+      path: '/bank-entry'
+      fullPath: '/bank-entry'
+      preLoaderRoute: typeof BankEntryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dc-entry': {
+      id: '/dc-entry'
+      path: '/dc-entry'
+      fullPath: '/dc-entry'
+      preLoaderRoute: typeof DcEntryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finished-goods': {
+      id: '/finished-goods'
+      path: '/finished-goods'
+      fullPath: '/finished-goods'
+      preLoaderRoute: typeof FinishedGoodsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invoices': {
+      id: '/invoices'
+      path: '/invoices'
+      fullPath: '/invoices'
+      preLoaderRoute: typeof InvoicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inward-entry': {
       id: '/inward-entry'
       path: '/inward-entry'
       fullPath: '/inward-entry'
       preLoaderRoute: typeof InwardEntryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ledger': {
+      id: '/ledger'
+      path: '/ledger'
+      fullPath: '/ledger'
+      preLoaderRoute: typeof LedgerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/log-entry': {
@@ -177,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/petty-cash': {
+      id: '/petty-cash'
+      path: '/petty-cash'
+      fullPath: '/petty-cash'
+      preLoaderRoute: typeof PettyCashRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/planned-workings': {
       id: '/planned-workings'
       path: '/planned-workings'
@@ -184,11 +356,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlannedWorkingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/price-list': {
+      id: '/price-list'
+      path: '/price-list'
+      fullPath: '/price-list'
+      preLoaderRoute: typeof PriceListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/process-costing': {
+      id: '/process-costing'
+      path: '/process-costing'
+      fullPath: '/process-costing'
+      preLoaderRoute: typeof ProcessCostingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/process-entry': {
       id: '/process-entry'
       path: '/process-entry'
       fullPath: '/process-entry'
       preLoaderRoute: typeof ProcessEntryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product-costing': {
+      id: '/product-costing'
+      path: '/product-costing'
+      fullPath: '/product-costing'
+      preLoaderRoute: typeof ProductCostingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tasks': {
@@ -217,11 +417,21 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BankEntryRoute: BankEntryRoute,
+  DcEntryRoute: DcEntryRoute,
+  FinishedGoodsRoute: FinishedGoodsRoute,
+  InvoicesRoute: InvoicesRoute,
   InwardEntryRoute: InwardEntryRoute,
+  LedgerRoute: LedgerRoute,
   LogEntryRoute: LogEntryRoute,
   PartiesRoute: PartiesRoute,
+  PettyCashRoute: PettyCashRoute,
   PlannedWorkingsRoute: PlannedWorkingsRoute,
+  PriceListRoute: PriceListRoute,
+  ProcessCostingRoute: ProcessCostingRoute,
   ProcessEntryRoute: ProcessEntryRoute,
+  ProductCostingRoute: ProductCostingRoute,
+  ReportsRoute: ReportsRoute,
   TasksRoute: TasksRoute,
   SalesOrdersOrderIdRoute: SalesOrdersOrderIdRoute,
   SalesOrdersIndexRoute: SalesOrdersIndexRoute,
