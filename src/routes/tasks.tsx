@@ -24,7 +24,7 @@ export const Route = createFileRoute("/tasks")({
       },
     ],
   }),
-  component: TasksPage;
+  component: TasksPage,
 });
 
 type Task = (typeof tasks)[number];
