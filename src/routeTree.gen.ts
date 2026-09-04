@@ -10,13 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InwardEntryRouteImport } from './routes/inward-entry'
+import { Route as LogEntryRouteImport } from './routes/log-entry'
 import { Route as PartiesRouteImport } from './routes/parties'
 import { Route as PlannedWorkingsRouteImport } from './routes/planned-workings'
+import { Route as ProcessEntryRouteImport } from './routes/process-entry'
 import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as SalesOrdersIndexRouteImport } from './routes/sales-orders.index'
+import { Route as SalesOrdersOrderIdRouteImport } from './routes/sales-orders.$orderId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InwardEntryRoute = InwardEntryRouteImport.update({
+  id: '/inward-entry',
+  path: '/inward-entry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogEntryRoute = LogEntryRouteImport.update({
+  id: '/log-entry',
+  path: '/log-entry',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartiesRoute = PartiesRouteImport.update({
@@ -29,44 +44,107 @@ const PlannedWorkingsRoute = PlannedWorkingsRouteImport.update({
   path: '/planned-workings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProcessEntryRoute = ProcessEntryRouteImport.update({
+  id: '/process-entry',
+  path: '/process-entry',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TasksRoute = TasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SalesOrdersIndexRoute = SalesOrdersIndexRouteImport.update({
+  id: '/sales-orders/',
+  path: '/sales-orders/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesOrdersOrderIdRoute = SalesOrdersOrderIdRouteImport.update({
+  id: '/sales-orders/$orderId',
+  path: '/sales-orders/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/inward-entry': typeof InwardEntryRoute
+  '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
   '/planned-workings': typeof PlannedWorkingsRoute
+  '/process-entry': typeof ProcessEntryRoute
   '/tasks': typeof TasksRoute
+  '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
+  '/sales-orders/': typeof SalesOrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/inward-entry': typeof InwardEntryRoute
+  '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
   '/planned-workings': typeof PlannedWorkingsRoute
+  '/process-entry': typeof ProcessEntryRoute
   '/tasks': typeof TasksRoute
+  '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
+  '/sales-orders': typeof SalesOrdersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/inward-entry': typeof InwardEntryRoute
+  '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
   '/planned-workings': typeof PlannedWorkingsRoute
+  '/process-entry': typeof ProcessEntryRoute
   '/tasks': typeof TasksRoute
+  '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
+  '/sales-orders/': typeof SalesOrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/parties' | '/planned-workings' | '/tasks'
+  fullPaths:
+    | '/'
+    | '/inward-entry'
+    | '/log-entry'
+    | '/parties'
+    | '/planned-workings'
+    | '/process-entry'
+    | '/tasks'
+    | '/sales-orders/$orderId'
+    | '/sales-orders/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/parties' | '/planned-workings' | '/tasks'
-  id: '__root__' | '/' | '/parties' | '/planned-workings' | '/tasks'
+  to:
+    | '/'
+    | '/inward-entry'
+    | '/log-entry'
+    | '/parties'
+    | '/planned-workings'
+    | '/process-entry'
+    | '/tasks'
+    | '/sales-orders/$orderId'
+    | '/sales-orders'
+  id:
+    | '__root__'
+    | '/'
+    | '/inward-entry'
+    | '/log-entry'
+    | '/parties'
+    | '/planned-workings'
+    | '/process-entry'
+    | '/tasks'
+    | '/sales-orders/$orderId'
+    | '/sales-orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  InwardEntryRoute: typeof InwardEntryRoute
+  LogEntryRoute: typeof LogEntryRoute
   PartiesRoute: typeof PartiesRoute
   PlannedWorkingsRoute: typeof PlannedWorkingsRoute
+  ProcessEntryRoute: typeof ProcessEntryRoute
   TasksRoute: typeof TasksRoute
+  SalesOrdersOrderIdRoute: typeof SalesOrdersOrderIdRoute
+  SalesOrdersIndexRoute: typeof SalesOrdersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,6 +154,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inward-entry': {
+      id: '/inward-entry'
+      path: '/inward-entry'
+      fullPath: '/inward-entry'
+      preLoaderRoute: typeof InwardEntryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/log-entry': {
+      id: '/log-entry'
+      path: '/log-entry'
+      fullPath: '/log-entry'
+      preLoaderRoute: typeof LogEntryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/parties': {
@@ -92,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlannedWorkingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/process-entry': {
+      id: '/process-entry'
+      path: '/process-entry'
+      fullPath: '/process-entry'
+      preLoaderRoute: typeof ProcessEntryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tasks': {
       id: '/tasks'
       path: '/tasks'
@@ -99,14 +198,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TasksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sales-orders/': {
+      id: '/sales-orders/'
+      path: '/sales-orders'
+      fullPath: '/sales-orders/'
+      preLoaderRoute: typeof SalesOrdersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales-orders/$orderId': {
+      id: '/sales-orders/$orderId'
+      path: '/sales-orders/$orderId'
+      fullPath: '/sales-orders/$orderId'
+      preLoaderRoute: typeof SalesOrdersOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  InwardEntryRoute: InwardEntryRoute,
+  LogEntryRoute: LogEntryRoute,
   PartiesRoute: PartiesRoute,
   PlannedWorkingsRoute: PlannedWorkingsRoute,
+  ProcessEntryRoute: ProcessEntryRoute,
   TasksRoute: TasksRoute,
+  SalesOrdersOrderIdRoute: SalesOrdersOrderIdRoute,
+  SalesOrdersIndexRoute: SalesOrdersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
