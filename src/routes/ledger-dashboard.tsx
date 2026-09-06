@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Loader2, ArrowUpDown, Plus } from "lucide-react";
 
-export const Route = createFileRoute("/ledger")({
+export const Route = createFileRoute("/ledger-dashboard")({
   head: () => ({
     meta: [{ title: "Ledger Statement | Argus" }],
   }),

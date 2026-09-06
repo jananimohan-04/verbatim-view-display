@@ -19,7 +19,7 @@ import { supabase } from "@/lib/supabase";
 export const Route = createFileRoute("/planned-workings")({
   head: () => ({
     meta: [
-      { title: "Planned Workings | Engineering ERP" },
+      { title: "Planned Workings | Argus" },
       { name: "description", content: "Manage planned workings and categories." },
     ],
   }),

@@ -1,204 +1,219 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calculator, Download } from "lucide-react";
-
-import { DataTable, type Column } from "@/components/erp/data-table";
-import { PageHeader, SectionCard, StatTile } from "@/components/erp/page-header";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { inr, productCosting } from "@/data/erp";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import { Loader2, RefreshCw, Copy, FileSpreadsheet, FileText, Printer, ArrowUp } from "lucide-react";
 
 export const Route = createFileRoute("/product-costing")({
-    head: () => ({
-        meta: [
-            { title: "Product Costing | Engineering ERP" },
-            {
-                name: "description",
-                content: "Detailed cost breakdown and margin analysis for manufactured products.",
-            },
-        ],
-    }),
-    component: ProductCostingPage,
+  head: () => ({
+    meta: [{ title: "Product Costing | Argus" }],
+  }),
+  component: ProductCostingPage,
 });
 
-type ProductCost = (typeof productCosting)[number];
-
-const columns: Column<ProductCost>[] = [
-    {
-        key: "code",
-        header: "Item Code",
-        sortable: true,
-        sortValue: (r) => r.code,
-        cell: (r) => <span className="font-semibold tabular text-accent-foreground">{r.code}</span>,
-    },
-    {
-        key: "product",
-        header: "Product Name",
-        sortable: true,
-        sortValue: (r) => r.product,
-        cell: (r) => <span className="font-medium text-foreground">{r.product}</span>,
-    },
-    {
-        key: "material",
-        header: "Material",
-        align: "right",
-        cell: (r) => <span className="tabular">{inr(r.material)}</span>,
-    },
-    {
-        key: "process",
-        header: "Process",
-        align: "right",
-        cell: (r) => <span className="tabular">{inr(r.process)}</span>,
-    },
-    {
-        key: "labour",
-        header: "Labour",
-        align: "right",
-        cell: (r) => <span className="tabular">{inr(r.labour)}</span>,
-    },
-    {
-        key: "totalCost",
-        header: "Total Cost",
-        align: "right",
-        sortable: true,
-        sortValue: (r) => r.material + r.process + r.labour + r.tool + r.overhead + r.other,
-        cell: (r) => {
-            const total = r.material + r.process + r.labour + r.tool + r.overhead + r.other;
-            return <span className="font-semibold tabular text-foreground">{inr(total)}</span>;
-        },
-    },
-    {
-        key: "sellingPrice",
-        header: "Selling Price",
-        align: "right",
-        sortable: true,
-        sortValue: (r) => r.sellingPrice,
-        cell: (r) => <span className="font-semibold tabular text-primary">{inr(r.sellingPrice)}</span>,
-    },
-    {
-        key: "margin",
-        header: "Margin %",
-        align: "right",
-        sortable: true,
-        sortValue: (r) => {
-            const total = r.material + r.process + r.labour + r.tool + r.overhead + r.other;
-            return ((r.sellingPrice - total) / r.sellingPrice) * 100;
-        },
-        cell: (r) => {
-            const total = r.material + r.process + r.labour + r.tool + r.overhead + r.other;
-            const margin = ((r.sellingPrice - total) / r.sellingPrice) * 100;
-            return (
-                <span className={`font-medium tabular ${margin < 15 ? "text-warning" : "text-success"}`}>
-                    {margin.toFixed(1)}%
-                </span>
-            );
-        },
-    },
-];
-
 function ProductCostingPage() {
-    const featured = productCosting[0]; // Pick one for the detail view
+  const [entries, setEntries] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [pageSize, setPageSize] = useState("100");
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
-    const totalProducts = productCosting.length;
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("product_costing")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    let totalCostSum = 0;
-    let totalMarginSum = 0;
+      if (error) throw error;
+      setEntries(data || []);
+    } catch (error: any) {
+      console.error("Error fetching product costing:", error);
+      toast.error("Failed to load data.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    productCosting.forEach((p) => {
-        const cost = p.material + p.process + p.labour + p.tool + p.overhead + p.other;
-        totalCostSum += cost;
-        const margin = ((p.sellingPrice - cost) / p.sellingPrice) * 100;
-        totalMarginSum += margin;
-    });
+  useEffect(() => {
+    fetchData();
 
-    const avgProductCost = totalProducts > 0 ? totalCostSum / totalProducts : 0;
-    const avgMargin = totalProducts > 0 ? totalMarginSum / totalProducts : 0;
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 200);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-    const featuredTotalCost = featured.material + featured.process + featured.labour + featured.tool + featured.overhead + featured.other;
-    const featuredMargin = ((featured.sellingPrice - featuredTotalCost) / featured.sellingPrice) * 100;
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    return (
-        <>
-            <PageHeader
-                title="Product Costing"
-                description="Detailed cost breakdown, pricing, and margin analysis for manufactured products."
-                actions={
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="h-9 gap-1.5">
-                            <Download className="size-3.5" /> Export
-                        </Button>
-                        <Button size="sm" className="h-9 gap-1.5">
-                            <Calculator className="size-3.5" /> New Costing
-                        </Button>
-                    </div>
-                }
-            />
+  const filteredEntries = entries.filter((e) =>
+    Object.values(e).some((val) =>
+      String(val).toLowerCase().includes(search.toLowerCase())
+    )
+  );
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                <StatTile label="Total Products" value={String(totalProducts)} hint="Costed items" />
-                <StatTile label="Avg Product Cost" value={inr(avgProductCost)} hint="Across all products" tone="primary" />
-                <StatTile label="Avg Margin" value={`${avgMargin.toFixed(1)}%`} hint="Blended margin" tone={avgMargin > 20 ? "success" : "warning"} />
-                <StatTile label="Low Margin Items" value={String(productCosting.filter(p => {
-                    const cost = p.material + p.process + p.labour + p.tool + p.overhead + p.other;
-                    return ((p.sellingPrice - cost) / p.sellingPrice) * 100 < 15;
-                }).length)} hint="Below 15% margin" tone="danger" />
+  const totalCostSum = filteredEntries.reduce((sum, row) => sum + (Number(row.total_cost) || 0), 0);
+  const formattedTotalCost = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(totalCostSum);
+
+  const columns = [
+    "CATEGORY", "PROJECT NAME", "PARTY NAME", "PART NAME", "QUANTITY", "TOTAL COST"
+  ];
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#fcfcfc] relative">
+      <div className="p-4 sm:p-6 mx-auto w-full flex-grow pb-20">
+        
+        {/* Header Area */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4 border-b pb-4">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase">PRODUCT COSTING</h1>
+          <div className="flex items-center gap-2">
+            <Button className="h-9 bg-[#ffb800] hover:bg-yellow-500 text-black font-semibold rounded-md shadow-sm" onClick={fetchData}>
+              <RefreshCw className="h-4 w-4 mr-2" /> Update
+            </Button>
+            <Select>
+              <SelectTrigger className="h-9 w-64 bg-white border-gray-300 text-gray-500">
+                <div className="flex items-center">
+                  <span className="text-blue-500 font-bold mr-2 text-lg">🔍</span>
+                  <SelectValue placeholder="Filter by Project ..." />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Projects</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center justify-between mb-4 gap-4">
+          <div className="flex items-center gap-2">
+            <Select value={pageSize} onValueChange={setPageSize}>
+              <SelectTrigger className="h-8 w-32 bg-gray-100 border-gray-300 text-sm">
+                <SelectValue placeholder="Show 100 rows" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">Show 10 rows</SelectItem>
+                <SelectItem value="50">Show 50 rows</SelectItem>
+                <SelectItem value="100">Show 100 rows</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex bg-gray-100 rounded-sm border border-gray-300 overflow-hidden">
+              <Button variant="ghost" className="h-8 px-3 rounded-none border-r border-gray-300 hover:bg-gray-200 text-xs font-semibold text-slate-700">
+                <Copy className="h-3 w-3 mr-1 text-slate-700" /> Copy
+              </Button>
+              <Button variant="ghost" className="h-8 px-3 rounded-none border-r border-gray-300 hover:bg-gray-200 text-xs font-semibold text-slate-700">
+                <FileSpreadsheet className="h-3 w-3 mr-1 text-green-600" /> Excel
+              </Button>
+              <Button variant="ghost" className="h-8 px-3 rounded-none border-r border-gray-300 hover:bg-gray-200 text-xs font-semibold text-slate-700">
+                <FileText className="h-3 w-3 mr-1 text-red-600" /> PDF
+              </Button>
+              <Button variant="ghost" className="h-8 px-3 rounded-none hover:bg-gray-200 text-xs font-semibold text-slate-700">
+                <Printer className="h-3 w-3 mr-1 text-slate-700" /> Print
+              </Button>
             </div>
+          </div>
 
-            <DataTable
-                columns={columns}
-                rows={productCosting}
-                rowKey={(r) => r.code}
-                searchPlaceholder="Search product name or code..."
-                searchKeys={(r) => `${r.code} ${r.product}`}
-            />
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <span>Search:</span>
+            <Input className="h-8 w-64 bg-white" value={search} onChange={(e) => setSearch(e.target.value)} />
+          </div>
+        </div>
 
-            <SectionCard
-                title={`Costing Profile · ${featured.code}`}
-                description={featured.product}
-            >
-                <Tabs defaultValue="Breakdown" className="p-5">
-                    <TabsList className="flex-wrap">
-                        <TabsTrigger value="Breakdown" className="text-xs">Cost Breakdown</TabsTrigger>
-                        <TabsTrigger value="Pricing" className="text-xs">Pricing & Margin</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="Breakdown" className="mt-4">
-                        <dl className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-                            {[
-                                ["Material Cost", inr(featured.material)],
-                                ["Process Cost", inr(featured.process)],
-                                ["Labour Cost", inr(featured.labour)],
-                                ["Tooling Cost", inr(featured.tool)],
-                                ["Overheads", inr(featured.overhead)],
-                                ["Other Costs", inr(featured.other)],
-                                ["Total Manufacturing Cost", inr(featuredTotalCost)],
-                            ].map(([label, value]) => (
-                                <div key={label} className="border-b border-border/70 pb-2">
-                                    <dt className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-                                        {label}
-                                    </dt>
-                                    <dd className="mt-0.5 text-sm font-medium text-foreground">{value}</dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </TabsContent>
-                    <TabsContent value="Pricing" className="mt-4">
-                        <dl className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-                            {[
-                                ["Total Cost", inr(featuredTotalCost)],
-                                ["Selling Price", inr(featured.sellingPrice)],
-                                ["Gross Profit", inr(featured.sellingPrice - featuredTotalCost)],
-                                ["Margin %", `${featuredMargin.toFixed(2)}%`],
-                            ].map(([label, value]) => (
-                                <div key={label} className="border-b border-border/70 pb-2">
-                                    <dt className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-                                        {label}
-                                    </dt>
-                                    <dd className="mt-0.5 text-sm font-medium text-foreground">{value}</dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </TabsContent>
-                </Tabs>
-            </SectionCard>
-        </>
-    );
+        {/* Table */}
+        <div className="overflow-x-auto border border-gray-200 bg-white">
+          <table className="w-full text-left text-[13px] whitespace-nowrap">
+            <thead>
+              {/* Filter Dropdowns Row */}
+              <tr className="bg-white border-b">
+                {columns.map((col, i) => (
+                  <th key={`filter-${i}`} className="p-2 border-r border-gray-100 font-normal">
+                    <Select>
+                      <SelectTrigger className="h-8 text-xs border-gray-300 w-full"><SelectValue placeholder="Select" /></SelectTrigger>
+                      <SelectContent><SelectItem value="all">All</SelectItem></SelectContent>
+                    </Select>
+                  </th>
+                ))}
+              </tr>
+              {/* Main Header Row */}
+              <tr className="bg-[#8b1c41] text-white">
+                {columns.map((col, i) => (
+                  <th key={col} className="px-3 py-4 font-bold text-xs border-r border-[#9d244c] last:border-r-0">
+                    <div className="flex items-center justify-between gap-1">
+                      {col}
+                      <div className="flex flex-col text-[8px] leading-[8px] opacity-70">
+                        <span>▲</span><span>▼</span>
+                      </div>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y text-slate-700">
+              {loading ? (
+                <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin text-[#8b1c41]" /></td></tr>
+              ) : filteredEntries.length === 0 ? (
+                <tr><td colSpan={6} className="p-6 text-center text-gray-500 bg-slate-50">No data available in table</td></tr>
+              ) : (
+                filteredEntries.map((row) => (
+                  <tr key={row.id} className="hover:bg-slate-50">
+                    <td className="px-3 py-3 border-r border-gray-100 uppercase">{row.category}</td>
+                    <td className="px-3 py-3 border-r border-gray-100 uppercase">{row.project_name}</td>
+                    <td className="px-3 py-3 border-r border-gray-100 uppercase">{row.party_name}</td>
+                    <td className="px-3 py-3 border-r border-gray-100 uppercase">{row.part_name}</td>
+                    <td className="px-3 py-3 border-r border-gray-100">{row.quantity}</td>
+                    <td className="px-3 py-3 border-r border-gray-100 font-semibold">{row.total_cost}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer Area */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mt-6 px-2">
+          <div className="text-sm text-slate-600 mb-4 sm:mb-0">
+            Showing 1 to {filteredEntries.length} of {filteredEntries.length} entries
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <div className="text-2xl font-bold text-[#8b1c41]">
+              GROSS TOTAL: {formattedTotalCost}
+            </div>
+            
+            {/* Pagination */}
+            <div className="flex items-center gap-1 mt-2">
+              <Button variant="outline" size="sm" className="h-8 rounded-sm bg-transparent border-transparent">&lt;</Button>
+              <Button variant="outline" size="sm" className="h-8 w-8 rounded-sm bg-[#007bff] text-white hover:bg-blue-600 border-transparent">1</Button>
+              <Button variant="outline" size="sm" className="h-8 w-8 rounded-sm bg-white border-gray-300 text-slate-600">2</Button>
+              <Button variant="outline" size="sm" className="h-8 rounded-sm bg-transparent border-transparent">&gt;</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Global Footer */}
+      <footer className="w-full bg-[#ffcd54] text-center text-xs font-medium text-slate-800 py-3 mt-auto">
+        © Argus Technologies | version 4.4
+      </footer>
+
+      {/* Floating Top Button */}
+      {showScrollTop && (
+        <Button 
+          className="fixed bottom-12 right-6 h-12 w-12 rounded-full bg-[#007bff] hover:bg-blue-600 text-white shadow-lg flex flex-col items-center justify-center p-0 z-50"
+          onClick={scrollToTop}
+        >
+          <ArrowUp className="h-4 w-4" />
+          <span className="text-[10px] font-semibold mt-[-2px]">Top</span>
+        </Button>
+      )}
+
+    </div>
+  );
 }

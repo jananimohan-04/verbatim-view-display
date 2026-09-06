@@ -52,16 +52,16 @@ function SidebarBody({
           collapsed && "justify-center px-2",
         )}
       >
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-          <Cpu className="size-5" />
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-white p-1 shadow-xs overflow-hidden border border-border/50">
+          <img src="/argus-logo.png" alt="Argus" className="size-full object-contain" />
         </div>
         {!collapsed ? (
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-sidebar-foreground">
-              Engineering ERP
+            <p className="truncate text-base font-bold tracking-tight text-sidebar-foreground">
+              Argus
             </p>
-            <p className="truncate text-[11px] text-sidebar-muted">
-              Manufacturing Management System
+            <p className="truncate text-[11px] font-medium text-sidebar-muted">
+              Manufacturing Management
             </p>
           </div>
         ) : null}
@@ -113,8 +113,8 @@ function SidebarBody({
 
       {!collapsed ? (
         <div className="border-t border-sidebar-border px-4 py-3">
-          <p className="text-[11px] text-sidebar-muted">Plant · Hosur Unit II</p>
-          <p className="mt-0.5 text-[11px] text-sidebar-muted">FY 2026–27 · Shift A</p>
+          <p className="text-[11px] font-semibold text-sidebar-foreground">Argus Technologies</p>
+          <p className="mt-0.5 text-[10px] text-sidebar-muted">Manufacturing ERP</p>
         </div>
       ) : null}
     </div>

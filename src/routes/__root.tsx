@@ -80,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Engineering ERP — CNC Manufacturing Management" },
+      { title: "Argus — CNC Manufacturing Management" },
       {
         name: "description",
         content:
           "Enterprise ERP for CNC engineering and manufacturing: planning, production, dispatch, costing and accounts in one workspace.",
       },
-      { name: "author", content: "Engineering ERP" },
-      { property: "og:title", content: "Engineering ERP — CNC Manufacturing Management" },
+      { name: "author", content: "Argus" },
+      { property: "og:title", content: "Argus — CNC Manufacturing Management" },
       {
         property: "og:description",
         content:

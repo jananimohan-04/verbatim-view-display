@@ -18,7 +18,7 @@ import { supabase } from "@/lib/supabase";
 export const Route = createFileRoute("/parties")({
   head: () => ({
     meta: [
-      { title: "Party Entry | Engineering ERP" },
+      { title: "Party Entry | Argus" },
       { name: "description", content: "Master records for customers, suppliers and vendors." },
     ],
   }),

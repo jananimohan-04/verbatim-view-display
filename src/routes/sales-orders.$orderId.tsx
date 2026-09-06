@@ -28,13 +28,13 @@ import {
 export const Route = createFileRoute("/sales-orders/$orderId")({
   head: () => ({
     meta: [
-      { title: "Sales Order Detail | Engineering ERP" },
+      { title: "Sales Order Detail | Argus" },
       {
         name: "description",
         content:
           "Complete sales order lifecycle: planned workings, inward, process tracking, finished goods, dispatch, invoices and activity.",
       },
-      { property: "og:title", content: "Sales Order Detail | Engineering ERP" },
+      { property: "og:title", content: "Sales Order Detail | Argus" },
       {
         property: "og:description",
         content: "Full traceability for a single CNC manufacturing sales order.",

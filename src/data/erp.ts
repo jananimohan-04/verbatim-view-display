@@ -1,4 +1,4 @@
-// Realistic sample data for the CNC Engineering ERP.
+// Realistic sample data for Argus.
 // Single in-memory dataset shared across modules so records stay cross-linked.
 
 export type StatusTone =

@@ -16,6 +16,7 @@ import { Route as FinishedGoodsRouteImport } from './routes/finished-goods'
 import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as InwardEntryRouteImport } from './routes/inward-entry'
 import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as LedgerDashboardRouteImport } from './routes/ledger-dashboard'
 import { Route as LogEntryRouteImport } from './routes/log-entry'
 import { Route as PartiesRouteImport } from './routes/parties'
 import { Route as PettyCashRouteImport } from './routes/petty-cash'
@@ -24,6 +25,7 @@ import { Route as PriceListRouteImport } from './routes/price-list'
 import { Route as ProcessCostingRouteImport } from './routes/process-costing'
 import { Route as ProcessEntryRouteImport } from './routes/process-entry'
 import { Route as ProductCostingRouteImport } from './routes/product-costing'
+import { Route as QuotesRouteImport } from './routes/quotes'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as SalesOrdersIndexRouteImport } from './routes/sales-orders.index'
@@ -62,6 +64,11 @@ const InwardEntryRoute = InwardEntryRouteImport.update({
 const LedgerRoute = LedgerRouteImport.update({
   id: '/ledger',
   path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LedgerDashboardRoute = LedgerDashboardRouteImport.update({
+  id: '/ledger-dashboard',
+  path: '/ledger-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LogEntryRoute = LogEntryRouteImport.update({
@@ -104,6 +111,11 @@ const ProductCostingRoute = ProductCostingRouteImport.update({
   path: '/product-costing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuotesRoute = QuotesRouteImport.update({
+  id: '/quotes',
+  path: '/quotes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -133,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/invoices': typeof InvoicesRoute
   '/inward-entry': typeof InwardEntryRoute
   '/ledger': typeof LedgerRoute
+  '/ledger-dashboard': typeof LedgerDashboardRoute
   '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
   '/petty-cash': typeof PettyCashRoute
@@ -141,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/process-costing': typeof ProcessCostingRoute
   '/process-entry': typeof ProcessEntryRoute
   '/product-costing': typeof ProductCostingRoute
+  '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
   '/tasks': typeof TasksRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
@@ -154,6 +168,7 @@ export interface FileRoutesByTo {
   '/invoices': typeof InvoicesRoute
   '/inward-entry': typeof InwardEntryRoute
   '/ledger': typeof LedgerRoute
+  '/ledger-dashboard': typeof LedgerDashboardRoute
   '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
   '/petty-cash': typeof PettyCashRoute
@@ -162,6 +177,7 @@ export interface FileRoutesByTo {
   '/process-costing': typeof ProcessCostingRoute
   '/process-entry': typeof ProcessEntryRoute
   '/product-costing': typeof ProductCostingRoute
+  '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
   '/tasks': typeof TasksRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
@@ -176,6 +192,7 @@ export interface FileRoutesById {
   '/invoices': typeof InvoicesRoute
   '/inward-entry': typeof InwardEntryRoute
   '/ledger': typeof LedgerRoute
+  '/ledger-dashboard': typeof LedgerDashboardRoute
   '/log-entry': typeof LogEntryRoute
   '/parties': typeof PartiesRoute
   '/petty-cash': typeof PettyCashRoute
@@ -184,6 +201,7 @@ export interface FileRoutesById {
   '/process-costing': typeof ProcessCostingRoute
   '/process-entry': typeof ProcessEntryRoute
   '/product-costing': typeof ProductCostingRoute
+  '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
   '/tasks': typeof TasksRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
@@ -199,6 +217,7 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/inward-entry'
     | '/ledger'
+    | '/ledger-dashboard'
     | '/log-entry'
     | '/parties'
     | '/petty-cash'
@@ -207,6 +226,7 @@ export interface FileRouteTypes {
     | '/process-costing'
     | '/process-entry'
     | '/product-costing'
+    | '/quotes'
     | '/reports'
     | '/tasks'
     | '/sales-orders/$orderId'
@@ -220,6 +240,7 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/inward-entry'
     | '/ledger'
+    | '/ledger-dashboard'
     | '/log-entry'
     | '/parties'
     | '/petty-cash'
@@ -228,6 +249,7 @@ export interface FileRouteTypes {
     | '/process-costing'
     | '/process-entry'
     | '/product-costing'
+    | '/quotes'
     | '/reports'
     | '/tasks'
     | '/sales-orders/$orderId'
@@ -241,6 +263,7 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/inward-entry'
     | '/ledger'
+    | '/ledger-dashboard'
     | '/log-entry'
     | '/parties'
     | '/petty-cash'
@@ -249,6 +272,7 @@ export interface FileRouteTypes {
     | '/process-costing'
     | '/process-entry'
     | '/product-costing'
+    | '/quotes'
     | '/reports'
     | '/tasks'
     | '/sales-orders/$orderId'
@@ -263,6 +287,7 @@ export interface RootRouteChildren {
   InvoicesRoute: typeof InvoicesRoute
   InwardEntryRoute: typeof InwardEntryRoute
   LedgerRoute: typeof LedgerRoute
+  LedgerDashboardRoute: typeof LedgerDashboardRoute
   LogEntryRoute: typeof LogEntryRoute
   PartiesRoute: typeof PartiesRoute
   PettyCashRoute: typeof PettyCashRoute
@@ -271,6 +296,7 @@ export interface RootRouteChildren {
   ProcessCostingRoute: typeof ProcessCostingRoute
   ProcessEntryRoute: typeof ProcessEntryRoute
   ProductCostingRoute: typeof ProductCostingRoute
+  QuotesRoute: typeof QuotesRoute
   ReportsRoute: typeof ReportsRoute
   TasksRoute: typeof TasksRoute
   SalesOrdersOrderIdRoute: typeof SalesOrdersOrderIdRoute
@@ -326,6 +352,13 @@ declare module '@tanstack/react-router' {
       path: '/ledger'
       fullPath: '/ledger'
       preLoaderRoute: typeof LedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ledger-dashboard': {
+      id: '/ledger-dashboard'
+      path: '/ledger-dashboard'
+      fullPath: '/ledger-dashboard'
+      preLoaderRoute: typeof LedgerDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/log-entry': {
@@ -384,6 +417,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductCostingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quotes': {
+      id: '/quotes'
+      path: '/quotes'
+      fullPath: '/quotes'
+      preLoaderRoute: typeof QuotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reports': {
       id: '/reports'
       path: '/reports'
@@ -423,6 +463,7 @@ const rootRouteChildren: RootRouteChildren = {
   InvoicesRoute: InvoicesRoute,
   InwardEntryRoute: InwardEntryRoute,
   LedgerRoute: LedgerRoute,
+  LedgerDashboardRoute: LedgerDashboardRoute,
   LogEntryRoute: LogEntryRoute,
   PartiesRoute: PartiesRoute,
   PettyCashRoute: PettyCashRoute,
@@ -431,6 +472,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProcessCostingRoute: ProcessCostingRoute,
   ProcessEntryRoute: ProcessEntryRoute,
   ProductCostingRoute: ProductCostingRoute,
+  QuotesRoute: QuotesRoute,
   ReportsRoute: ReportsRoute,
   TasksRoute: TasksRoute,
   SalesOrdersOrderIdRoute: SalesOrdersOrderIdRoute,
