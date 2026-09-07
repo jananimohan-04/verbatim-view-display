@@ -18,6 +18,7 @@ import { Route as InwardEntryRouteImport } from './routes/inward-entry'
 import { Route as LedgerRouteImport } from './routes/ledger'
 import { Route as LedgerDashboardRouteImport } from './routes/ledger-dashboard'
 import { Route as LogEntryRouteImport } from './routes/log-entry'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PartiesRouteImport } from './routes/parties'
 import { Route as PettyCashRouteImport } from './routes/petty-cash'
 import { Route as PlannedWorkingsRouteImport } from './routes/planned-workings'
@@ -74,6 +75,11 @@ const LedgerDashboardRoute = LedgerDashboardRouteImport.update({
 const LogEntryRoute = LogEntryRouteImport.update({
   id: '/log-entry',
   path: '/log-entry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartiesRoute = PartiesRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/ledger': typeof LedgerRoute
   '/ledger-dashboard': typeof LedgerDashboardRoute
   '/log-entry': typeof LogEntryRoute
+  '/login': typeof LoginRoute
   '/parties': typeof PartiesRoute
   '/petty-cash': typeof PettyCashRoute
   '/planned-workings': typeof PlannedWorkingsRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/ledger': typeof LedgerRoute
   '/ledger-dashboard': typeof LedgerDashboardRoute
   '/log-entry': typeof LogEntryRoute
+  '/login': typeof LoginRoute
   '/parties': typeof PartiesRoute
   '/petty-cash': typeof PettyCashRoute
   '/planned-workings': typeof PlannedWorkingsRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/ledger': typeof LedgerRoute
   '/ledger-dashboard': typeof LedgerDashboardRoute
   '/log-entry': typeof LogEntryRoute
+  '/login': typeof LoginRoute
   '/parties': typeof PartiesRoute
   '/petty-cash': typeof PettyCashRoute
   '/planned-workings': typeof PlannedWorkingsRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/ledger'
     | '/ledger-dashboard'
     | '/log-entry'
+    | '/login'
     | '/parties'
     | '/petty-cash'
     | '/planned-workings'
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/ledger'
     | '/ledger-dashboard'
     | '/log-entry'
+    | '/login'
     | '/parties'
     | '/petty-cash'
     | '/planned-workings'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/ledger'
     | '/ledger-dashboard'
     | '/log-entry'
+    | '/login'
     | '/parties'
     | '/petty-cash'
     | '/planned-workings'
@@ -289,6 +301,7 @@ export interface RootRouteChildren {
   LedgerRoute: typeof LedgerRoute
   LedgerDashboardRoute: typeof LedgerDashboardRoute
   LogEntryRoute: typeof LogEntryRoute
+  LoginRoute: typeof LoginRoute
   PartiesRoute: typeof PartiesRoute
   PettyCashRoute: typeof PettyCashRoute
   PlannedWorkingsRoute: typeof PlannedWorkingsRoute
@@ -366,6 +379,13 @@ declare module '@tanstack/react-router' {
       path: '/log-entry'
       fullPath: '/log-entry'
       preLoaderRoute: typeof LogEntryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/parties': {
@@ -465,6 +485,7 @@ const rootRouteChildren: RootRouteChildren = {
   LedgerRoute: LedgerRoute,
   LedgerDashboardRoute: LedgerDashboardRoute,
   LogEntryRoute: LogEntryRoute,
+  LoginRoute: LoginRoute,
   PartiesRoute: PartiesRoute,
   PettyCashRoute: PettyCashRoute,
   PlannedWorkingsRoute: PlannedWorkingsRoute,

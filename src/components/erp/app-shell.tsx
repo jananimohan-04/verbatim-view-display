@@ -32,6 +32,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { breadcrumbFor, navGroups } from "./nav-config";
 
@@ -134,9 +136,25 @@ const quickAdd = [
 export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const trail = breadcrumbFor(pathname);
+
+  // If on login route, render children full-screen without sidebar/navbar
+  if (pathname === "/login") {
+    return <>{children}</>;
+  }
+
+  const handleSignOut = async () => {
+    await logout();
+    toast.success("Signed out successfully", {
+      description: "Your session has been securely closed.",
+    });
+    navigate({ to: "/login" });
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -264,32 +282,40 @@ export function AppShell({ children }: { children: ReactNode }) {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-accent">
-                    <span className="flex size-8 items-center justify-center rounded-full bg-primary-soft text-xs font-bold text-accent-foreground">
-                      JM
+                  <button className="flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-accent cursor-pointer">
+                    <span className="flex size-8 items-center justify-center rounded-full bg-primary-soft text-xs font-bold text-accent-foreground uppercase">
+                      {user?.avatar || (user?.name ? user.name.slice(0, 2).toUpperCase() : "JM")}
                     </span>
                     <span className="hidden text-left leading-tight md:block">
                       <span className="block text-xs font-semibold text-foreground">
-                        Janani Mohan
+                        {user?.name || "Janani Mohan"}
                       </span>
                       <span className="block text-[10px] text-muted-foreground">
-                        Plant Administrator
+                        {user?.role || "Plant Administrator"}
                       </span>
                     </span>
                     <ChevronDown className="hidden size-3.5 text-muted-foreground md:block" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuLabel>My account</DropdownMenuLabel>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuLabel className="font-semibold text-xs">
+                    My Account
+                    <span className="block font-normal text-[10px] text-muted-foreground truncate">
+                      {user?.email || "janani.m@argus.com"}
+                    </span>
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setProfileOpen(true)} className="cursor-pointer">
                     <UserRound className="size-4" /> Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setPreferencesOpen(true)} className="cursor-pointer">
                     <Settings className="size-4" /> Preferences
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-destructive focus:text-destructive">
+                  <DropdownMenuItem
+                    onClick={handleSignOut}
+                    className="text-destructive focus:text-destructive cursor-pointer font-medium"
+                  >
                     <LogOut className="size-4" /> Sign out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -297,6 +323,77 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </div>
         </header>
+
+        {/* Profile Dialog */}
+        <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
+          <DialogContent className="max-w-md p-6 bg-card text-foreground">
+            <DialogHeader>
+              <DialogTitle className="text-lg font-bold">User Profile</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              <div className="flex items-center gap-4 border-b border-border pb-4">
+                <div className="size-14 rounded-full bg-primary-soft flex items-center justify-center text-xl font-bold text-accent-foreground">
+                  {user?.avatar || "JM"}
+                </div>
+                <div>
+                  <h4 className="font-bold text-base">{user?.name || "Janani Mohan"}</h4>
+                  <p className="text-xs text-muted-foreground">{user?.email || "janani.m@argus.com"}</p>
+                  <span className="inline-block mt-1 text-[11px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-sm">
+                    {user?.role || "Plant Administrator"}
+                  </span>
+                </div>
+              </div>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between py-1 border-b border-border/50">
+                  <span className="text-muted-foreground">Assigned Facility:</span>
+                  <span className="font-semibold">{user?.plant || "Hosur Unit II"}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-border/50">
+                  <span className="text-muted-foreground">Access Level:</span>
+                  <span className="font-semibold text-emerald-600">Full Enterprise Admin</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-muted-foreground">Session Status:</span>
+                  <span className="font-semibold text-blue-600">Active (Secure SSL)</span>
+                </div>
+              </div>
+              <div className="flex justify-end pt-2">
+                <Button size="sm" onClick={() => setProfileOpen(false)}>Done</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Preferences Dialog */}
+        <Dialog open={preferencesOpen} onOpenChange={setPreferencesOpen}>
+          <DialogContent className="max-w-md p-6 bg-card text-foreground">
+            <DialogHeader>
+              <DialogTitle className="text-lg font-bold">Workstation Preferences</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-2 text-xs">
+              <p className="text-muted-foreground">Manage your CNC workstation and telemetry preferences.</p>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-2.5 rounded-md border border-border">
+                  <div>
+                    <p className="font-semibold">Live Machine Telemetry</p>
+                    <p className="text-[11px] text-muted-foreground">Stream real-time 5-axis OEE and spindle data</p>
+                  </div>
+                  <span className="text-xs font-semibold text-emerald-600">Enabled</span>
+                </div>
+                <div className="flex items-center justify-between p-2.5 rounded-md border border-border">
+                  <div>
+                    <p className="font-semibold">Notification Chimes</p>
+                    <p className="text-[11px] text-muted-foreground">Alert on critical tool wear or delayed shipments</p>
+                  </div>
+                  <span className="text-xs font-semibold text-emerald-600">Enabled</span>
+                </div>
+              </div>
+              <div className="flex justify-end pt-2">
+                <Button size="sm" onClick={() => setPreferencesOpen(false)}>Save Settings</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <main className="mx-auto w-full max-w-[1600px] flex-1 space-y-6 px-4 py-6 lg:px-6">
           {children}

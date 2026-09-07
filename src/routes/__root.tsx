@@ -4,15 +4,19 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
+  useNavigate,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/erp/app-shell";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider, useAuth } from "@/lib/auth";
 
 
 function NotFoundComponent() {
@@ -130,15 +134,53 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function AuthGuard({ children }: { children: ReactNode }) {
+  const { isAuthenticated, isLoading } = useAuth();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!isAuthenticated && pathname !== "/login") {
+        navigate({ to: "/login" });
+      } else if (isAuthenticated && pathname === "/login") {
+        navigate({ to: "/" });
+      }
+    }
+  }, [isAuthenticated, isLoading, pathname, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0B1120] text-slate-100">
+        <div className="flex flex-col items-center gap-3">
+          <div className="size-12 rounded-xl bg-white p-2 shadow-lg flex items-center justify-center">
+            <img src="/argus-logo.png" alt="Argus" className="size-full object-contain animate-pulse" />
+          </div>
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-300">
+            <Loader2 className="size-4 animate-spin text-blue-400" />
+            <span>Loading Argus Workspace...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppShell>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </AppShell>
+      <AuthProvider>
+        <AuthGuard>
+          <AppShell>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </AppShell>
+        </AuthGuard>
+      </AuthProvider>
       <Toaster />
     </QueryClientProvider>
   );
