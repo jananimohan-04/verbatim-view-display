@@ -72,12 +72,6 @@ function LoginPage() {
     }
   };
 
-  const handleQuickDemo = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setErrorMessage("");
-  };
-
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#0B1120] text-slate-100 font-sans select-none overflow-x-hidden">
       
@@ -249,42 +243,6 @@ function LoginPage() {
               )}
             </Button>
           </form>
-
-          {/* Quick Demo Login Preset Buttons */}
-          <div className="mt-8 pt-6 border-t border-slate-800">
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-center mb-3">
-              One-Click Enterprise Role Presets
-            </p>
-            <div className="grid grid-cols-2 gap-2.5">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleQuickDemo("admin@argus.com", "admin123")}
-                className="h-9 bg-slate-900/60 border-slate-700/70 text-slate-300 hover:bg-slate-800 hover:text-white text-xs rounded-md font-medium"
-              >
-                Plant Administrator
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleQuickDemo("production@argus.com", "admin123")}
-                className="h-9 bg-slate-900/60 border-slate-700/70 text-slate-300 hover:bg-slate-800 hover:text-white text-xs rounded-md font-medium"
-              >
-                Production Manager
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="w-full text-center text-xs text-slate-500 pt-4">
-          <span>Need plant terminal access? </span>
-          <a
-            href="mailto:support@argus-technologies.in"
-            className="text-blue-400 hover:underline font-medium"
-          >
-            Contact Systems Desk
-          </a>
         </div>
 
       </div>

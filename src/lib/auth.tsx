@@ -24,7 +24,7 @@ const DEFAULT_USER: UserProfile = {
   email: "janani.m@argus.com",
   name: "Janani Mohan",
   role: "Plant Administrator",
-  plant: "Hosur Unit II",
+  plant: "Plant Facility I",
   avatar: "JM",
 };
 
@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: session.user.email || "user@argus.com",
             name: session.user.user_metadata?.full_name || "Plant Operator",
             role: session.user.user_metadata?.role || "Plant Administrator",
-            plant: "Hosur Unit II",
+            plant: "Plant Facility I",
             avatar: (session.user.email?.[0] || "A").toUpperCase(),
           };
           setUser(userObj);
@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: session.user.email || "user@argus.com",
           name: session.user.user_metadata?.full_name || "Janani Mohan",
           role: session.user.user_metadata?.role || "Plant Administrator",
-          plant: "Hosur Unit II",
+          plant: "Plant Facility I",
           avatar: "JM",
         };
         setUser(userObj);
@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: data.user.email || email,
           name: data.user.user_metadata?.full_name || "Janani Mohan",
           role: data.user.user_metadata?.role || "Plant Administrator",
-          plant: "Hosur Unit II",
+          plant: "Plant Facility I",
           avatar: "JM",
         };
         setUser(userObj);

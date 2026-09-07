@@ -346,7 +346,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between py-1 border-b border-border/50">
                   <span className="text-muted-foreground">Assigned Facility:</span>
-                  <span className="font-semibold">{user?.plant || "Hosur Unit II"}</span>
+                  <span className="font-semibold">{user?.plant || "Plant Facility I"}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-border/50">
                   <span className="text-muted-foreground">Access Level:</span>
