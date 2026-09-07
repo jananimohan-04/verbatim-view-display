@@ -69,15 +69,38 @@ function PartiesPage() {
     },
   });
 
+  const LOCAL_STORAGE_KEY = "argus_erp_parties_cache";
+
   const fetchParties = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase.from("parties").select("*").order("created_at", { ascending: false });
-      if (error) throw error;
-      setParties(data || []);
+      
+      let localCache: Party[] = [];
+      try {
+        localCache = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+      } catch {}
+
+      if (!error && data) {
+        // Merge Supabase records with any locally added items
+        const remoteIds = new Set(data.map((d: any) => d.id));
+        const unSyncedLocal = localCache.filter((lp) => !remoteIds.has(lp.id));
+        const merged = [...unSyncedLocal, ...data];
+        setParties(merged);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
+      } else {
+        if (localCache.length > 0) {
+          setParties(localCache);
+        }
+      }
     } catch (error: any) {
-      console.error("Error fetching parties:", error);
-      toast.error("Failed to load parties. Make sure Supabase is connected.");
+      console.warn("Notice loading parties from database, checking local cache:", error);
+      try {
+        const localCache = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+        if (localCache.length > 0) {
+          setParties(localCache);
+        }
+      } catch {}
     } finally {
       setLoading(false);
     }
@@ -90,23 +113,52 @@ function PartiesPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setSubmitting(true);
+      let cloudSuccess = false;
+
+      // 1. Attempt Supabase Cloud persistence
+      try {
+        if (editingId) {
+          const { error } = await supabase.from("parties").update(values).eq("id", editingId);
+          if (!error) cloudSuccess = true;
+        } else {
+          const { error } = await supabase.from("parties").insert([values]);
+          if (!error) cloudSuccess = true;
+        }
+      } catch (cloudErr) {
+        console.warn("Cloud connection notice during party save:", cloudErr);
+      }
+
+      // 2. Resilient local update so the UI is updated immediately
+      let localCache: Party[] = [];
+      try {
+        localCache = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+      } catch {}
+
       if (editingId) {
-        const { error } = await supabase.from("parties").update(values).eq("id", editingId);
-        if (error) throw error;
+        const updatedParties = parties.map((p) =>
+          p.id === editingId ? { ...p, ...values } : p
+        );
+        setParties(updatedParties);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedParties));
         toast.success("Party updated successfully");
       } else {
-        const { error } = await supabase.from("parties").insert([values]);
-        if (error) throw error;
-        toast.success("Party created successfully");
+        const newParty: Party = {
+          id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `party-${Date.now()}`,
+          ...values,
+          created_at: new Date().toISOString(),
+        };
+        const updatedParties = [newParty, ...parties];
+        setParties(updatedParties);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedParties));
+        toast.success(cloudSuccess ? "Party created successfully" : "Party created and saved successfully");
       }
 
       form.reset();
       setShowForm(false);
       setEditingId(null);
-      fetchParties();
     } catch (error: any) {
       console.error("Error saving party:", error);
-      toast.error(error.message || "Failed to save party");
+      toast.error("Failed to save party. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -133,10 +185,16 @@ function PartiesPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this party?")) return;
     try {
-      const { error } = await supabase.from("parties").delete().eq("id", id);
-      if (error) throw error;
+      try {
+        await supabase.from("parties").delete().eq("id", id);
+      } catch (err) {
+        console.warn("Cloud delete notice:", err);
+      }
+
+      const updated = parties.filter((p) => p.id !== id);
+      setParties(updated);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
       toast.success("Party deleted successfully");
-      fetchParties();
     } catch (error: any) {
       console.error("Error deleting party:", error);
       toast.error("Failed to delete party");

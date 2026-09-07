@@ -47,6 +47,24 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      if (url.pathname.startsWith("/api/supabase/")) {
+        const targetPath = url.pathname.replace(/^\/api\/supabase\//, "");
+        const targetUrl = `https://poioxmtrlqbiurrpgehd.supabase.co/${targetPath}${url.search}`;
+
+        const reqHeaders = new Headers(request.headers);
+        reqHeaders.set("host", "poioxmtrlqbiurrpgehd.supabase.co");
+
+        const res = await fetch(targetUrl, {
+          method: request.method,
+          headers: reqHeaders,
+          body: ["GET", "HEAD"].includes(request.method) ? undefined : request.body,
+          duplex: "half",
+        } as any);
+
+        return res;
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
